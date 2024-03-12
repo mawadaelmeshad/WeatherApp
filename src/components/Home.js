@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import '../style.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import swal from 'sweetalert';
 import search_icon from './Assets/search.png';
 import clear_icon from './Assets/clear.png';
 import cloud_icon from './Assets/cloud.png';
@@ -16,13 +17,13 @@ function Home(){
     const [wicon, setwicon] = useState(cloud_icon);
     const search = async () => {
         const element = document.getElementsByClassName("cityInput");
-        if(element[0].value===""){
-            alert("Please write a valid city name");
-            return 0;
-        }
         let url = `https://api.openweathermap.org/data/2.5/weather?q=${element[0].value}&units=Metric&appid=${api_key}`;
         let response = await fetch(url);
         let data = await response.json();
+        if(element[0].value==="" || data.cod === "404"){
+            swal("Please write a valid city name");
+            return 0;
+        }
         const humidity = document.getElementsByClassName("humidity-percent");
         const wind = document.getElementsByClassName("wind-rate");
         const temprature = document.getElementsByClassName("weather-temp");
